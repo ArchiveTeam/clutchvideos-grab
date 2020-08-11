@@ -160,6 +160,10 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
   end
 
+  if string.match(url, "^https?://[^/]*fastly%.net/media/videos/") then
+    check(string.gsub(url, "^(https?://)[^/]+", "%1ftw%.storage%.googleapis%.com"))
+  end
+
   if allowed(url, nil) and status_code == 200
     and not string.match(url, "^https?://[^/]*fastly%.net/")
     and not string.match(url, "^https?://[^/]*googleapis%.com/") then
