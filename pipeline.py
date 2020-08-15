@@ -49,7 +49,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20200812.01'
+VERSION = '20200815.01'
 USER_AGENT = 'Archive Team'
 TRACKER_ID = 'clutchvideos'
 TRACKER_HOST = 'trackerproxy.meo.ws'
@@ -183,7 +183,7 @@ class WgetArgs(object):
         item['item_type'] = item_type
         item['item_value'] = item_value
 
-        if item_type in ('post', 'video'):
+        if item_type in ('post', 'video', 'video-high'):
             wget_args.extend(['--warc-header', 'clutch-post: ' + item_value])
             wget_args.append('https://api.clutch.win/v1/posts/' + item_value + '/')
         else:

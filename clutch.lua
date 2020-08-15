@@ -70,7 +70,7 @@ allowed = function(url, parenturl, force)
       string.match(url, "^https?://[^/]*fastly%.net/")
       or string.match(url, "^https?://[^/]*googleapis%.com/")
     )
-    and item_type == "video" then
+    and string.match(item_type, "^video") then
     if ids[string.match(url, "^https?://[^/]+(/.+)$")] then
       return true
     end
@@ -170,9 +170,21 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     html = read_file(file)
     if string.match(url, "^https?://api%.clutch%.win/v1/posts/[^/]+/$") then
       local data = load_json_file(html)
-      if item_type == "video" then
-        ids[string.match(data["data"]["post"]["video_url"], "^https?://[^/]+(/.+)$")] = true
-        check(data["data"]["post"]["video_url"])
+      if string.match(item_type, "^video") then
+        local video_url = nil
+        if item_type == "video" then
+          video_url = data["data"]["post"]["video_url"]
+        elseif item_type == "video-high" then
+          video_url = data["data"]["post"]["high_quality_video_url"]
+        else
+          io.stdout:write("Could not find video.\n")
+          io.stdout:flush()
+          abortgrab = true
+        end
+        if video_url then
+          ids[string.match(video_url, "^https?://[^/]+(/.+)$")] = true
+          check(video_url)
+        end
         check(url .. "comments/")
         check(url .. "likes/")
         check(url .. "reposts/")
